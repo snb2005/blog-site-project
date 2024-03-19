@@ -11,6 +11,7 @@
             padding: 0;
             background-color: #f9f9f9;
             color: #333;
+            transition: background-color 0.5s ease;
         }
 
         .container {
@@ -20,6 +21,7 @@
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
+            transition: background-color 0.5s ease;
         }
 
         h1 {
@@ -38,6 +40,7 @@
             margin-bottom: 10px;
             color: #555;
             font-weight: bold;
+            transition: color 0.5s ease; /* Add transition for label color */
         }
 
         input[type="text"],
@@ -71,31 +74,11 @@
             margin-bottom: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.5s ease;
         }
 
-        .blog-post h2 {
-            color: #4CAF50;
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-size: 24px;
-        }
-
-        .blog-post p {
-            color: #555;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-
-        .blog-post .author {
-            font-style: italic;
-            color: #888;
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-
-        .blog-post .timestamp {
-            font-size: 12px;
-            color: #888;
+        .blog-post h2, .blog-post p, .blog-post .author, .blog-post .timestamp {
+            color: #333;
         }
 
         .edit-btn {
@@ -113,11 +96,62 @@
         .edit-btn:hover {
             background-color: #006080;
         }
+
+        .dark-mode-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: transparent;
+            border: none;
+            color: #4CAF50;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1; /* Ensure the button stays on top */
+            transition: color 0.3s ease;
+        }
+
+        .dark-mode-btn:hover {
+            color: #45a049;
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .container.dark-mode {
+            background-color: #444;
+            color: #fff;
+        }
+
+        .dark-mode-btn.dark-mode {
+            color: #fff;
+        }
+
+        textarea {
+            background-color: #fff;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        /* Additional styles for dark mode */
+        body.dark-mode input[type="text"],
+        body.dark-mode textarea {
+            background-color: #444;
+            color: #fff;
+            border-color: #888;
+        }
+
+        body.dark-mode label {
+            color: #f0f0f0; /* Change label color to #f0f0f0 in dark mode */
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Simple Blog</h1>
+        <button class="dark-mode-btn" id="dark-mode-toggle">&#9728;</button>
         <form id="blog-form">
             <label for="title">Title:</label>
             <input type="text" id="title" name="title" placeholder="Enter title..." required>
@@ -137,6 +171,27 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const body = document.body;
+            const container = document.querySelector('.container');
+
+            // Function to toggle dark mode
+            function toggleDarkMode() {
+                body.classList.toggle('dark-mode');
+                container.classList.toggle('dark-mode');
+                darkModeToggle.classList.toggle('dark-mode');
+
+                const blogPosts = document.querySelectorAll('.blog-post');
+                blogPosts.forEach(post => post.classList.toggle('dark-mode'));
+
+                // Toggle input area style
+                const inputs = document.querySelectorAll('input[type="text"], textarea');
+                inputs.forEach(input => input.classList.toggle('dark-mode-input'));
+            }
+
+            // Event listener for dark mode toggle button
+            darkModeToggle.addEventListener('click', toggleDarkMode);
+
             // Function to create a new blog post element
             function createBlogPostElement(title, content, author, timestamp) {
                 const blogPostDiv = document.createElement('div');
