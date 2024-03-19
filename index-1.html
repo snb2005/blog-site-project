@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Blog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: powderblue;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #d0ff78;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #f5a9a9;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #216b33;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .blog-post {
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .blog-post h2 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .blog-post p {
+            color: #db5353;
+            margin-bottom: 10px;
+        }
+
+        .blog-post .author {
+            font-style: italic;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        .blog-post .timestamp {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .edit-btn {
+            background-color: #7496df;
+            color: #d19595;
+            border: none;
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .edit-btn:hover {
+            background-color: #3759f3;
+        }
+
+        .edit-form {
+            display: none;
+            margin-bottom: 10px;
+        }
+
+        .edit-form.show {
+            display: block;
+            text-align: center;
+        }
+
+        .edit-form input,
+        .edit-form textarea,
+        .edit-form button {
+            width: calc(100% - 22px);
+            margin-bottom: 10px;
+        }
+
+        .edit-form button {
+            margin-top: 10px;
+        }
+
+        /* Colorful styles */
+        .container {
+            background-color: #f7f7f7;
+            color: #333;
+        }
+
+        button,
+        input[type="text"],
+        textarea {
+            background-color: #60d1e6;
+            border: 1px solid #ccc;
+        }
+
+        button:hover {
+            background-color: #3866fc;
+        }
+
+        .blog-post {
+            background-color: #e6e6e6;
+            border: 1px solid #ccc;
+        }
+
+        .edit-btn {
+            background-color: #5cb85c;
+        }
+
+        .edit-btn:hover {
+            background-color: #4cae4c;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simple Blog</h1>
+        <form id="blog-form">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+            <br>
+            <label for="content">Content:</label>
+            <textarea id="content" name="content" rows="5" required></textarea>
+            <br>
+            <label for="author">Author:</label>
+            <input type="text" id="author" name="author" required>
+            <br>
+            <button type="submit">Create Post</button>
+        </form>
+        <div id="blog-posts">
+            <!-- Blog posts will be dynamically added here -->
+        </div>
+    </div>
+
+    <script>
+        // Function to create a new blog post element
+        function createBlogPostElement(title, content, author, timestamp) {
+            const blogPostDiv = document.createElement('div');
+            blogPostDiv.classList.add('blog-post');
+
+            const titleHeading = document.createElement('h2');
+            titleHeading.textContent = title;
+
+            const contentParagraph = document.createElement('p');
+            contentParagraph.textContent = content;
+
+            const authorInfo = document.createElement('div');
+            authorInfo.classList.add('author');
+            authorInfo.textContent = `Author: ${author}`;
+
+            const timestampInfo = document.createElement('div');
+            timestampInfo.classList.add('timestamp');
+            timestampInfo.textContent = `Posted on: ${timestamp}`;
+
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit';
+            editButton.classList.add('edit-btn');
+
+            // Event listener for edit button
+            editButton.addEventListener('click', function() {
+                // Show the edit form
+                editForm.classList.add('show');
+
+                // Populate form with existing content
+                titleInput.value = title;
+                contentTextArea.value = content;
+                authorInput.value = author;
+
+                // Add event listener to edit form submission
+                editForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+
+                    // Update blog post content with form inputs
+                    titleHeading.textContent = titleInput.value;
+                    contentParagraph.textContent = contentTextArea.value;
+                    authorInfo.textContent = `Author: ${authorInput.value}`;
+                    timestampInfo.textContent = `Posted on: ${timestamp}`;
+
+                    // Hide the edit form
+                    editForm.classList.remove('show');
+                });
+            });
+
+            blogPostDiv.appendChild(titleHeading);
+            blogPostDiv.appendChild(contentParagraph);
+            blogPostDiv.appendChild(authorInfo);
+            blogPostDiv.appendChild(timestampInfo);
+            blogPostDiv.appendChild(editButton);
+
+            return blogPostDiv;
+        }
+
+        // Function to handle form submission
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const author = document.getElementById('author').value;
+            const timestamp = new Date().toLocaleString();
+
+            const blogPostElement = createBlogPostElement(title, content, author, timestamp);
+            document.getElementById('blog-posts').appendChild(blogPostElement);
+
+            // Clear form fields
+            document.getElementById('blog-form').reset();
+        }
+
+        // Add event listener to form submit
+        document.getElementById('blog-form').addEventListener('submit', handleFormSubmit);
+
+        // Get form elements for editing
+        const editForm = document.createElement('form');
+        editForm.classList.add('edit-form');
+        const titleInput = document.createElement('input');
+        titleInput.setAttribute('type', 'text');
+        titleInput.setAttribute('placeholder', 'Title');
+        const contentTextArea = document.createElement('textarea');
+        contentTextArea.setAttribute('placeholder', 'Content');
+        const authorInput = document.createElement('input');
+        authorInput.setAttribute('type', 'text');
+        authorInput.setAttribute('placeholder', 'Author');
+        const editSubmitButton = document.createElement('button');
+        editSubmitButton.textContent = 'Save Changes';
+        editForm.appendChild(titleInput);
+        editForm.appendChild(contentTextArea);
+        editForm.appendChild(authorInput);
+        editForm.appendChild(editSubmitButton);
+        document.body.appendChild(editForm);
+    </script>
+</body>
+</html>
