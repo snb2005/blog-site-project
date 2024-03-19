@@ -81,7 +81,7 @@
             color: #333;
         }
 
-        .edit-btn {
+        .edit-btn, .delete-btn {
             background-color: #008CBA;
             color: #fff;
             border: none;
@@ -93,7 +93,7 @@
             transition: background-color 0.3s ease;
         }
 
-        .edit-btn:hover {
+        .edit-btn:hover, .delete-btn:hover {
             background-color: #006080;
         }
 
@@ -240,11 +240,28 @@
                     });
                 });
 
+                // Delete button
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.classList.add('delete-btn');
+
+                // Event listener for delete button
+                deleteButton.addEventListener('click', function() {
+                    // Remove the blog post from DOM
+                    blogPostDiv.remove();
+
+                    // Remove the blog post from local storage
+                    const blogPosts = getFromLocalStorage();
+                    const updatedPosts = blogPosts.filter(post => post.title !== title);
+                    saveToLocalStorage(updatedPosts);
+                });
+
                 blogPostDiv.appendChild(titleHeading);
                 blogPostDiv.appendChild(contentParagraph);
                 blogPostDiv.appendChild(authorInfo);
                 blogPostDiv.appendChild(timestampInfo);
                 blogPostDiv.appendChild(editButton);
+                blogPostDiv.appendChild(deleteButton);
 
                 return blogPostDiv;
             }
@@ -263,10 +280,40 @@
 
                 // Clear form fields
                 document.getElementById('blog-form').reset();
+
+                // Save blog posts to local storage after submitting the form
+                const newPost = { title, content, author, timestamp };
+                const blogPosts = getFromLocalStorage();
+                blogPosts.push(newPost);
+                saveToLocalStorage(blogPosts);
             }
 
             // Add event listener to form submit
             document.getElementById('blog-form').addEventListener('submit', handleFormSubmit);
+
+            // Function to retrieve blog posts from local storage
+            function getFromLocalStorage() {
+                const savedPosts = localStorage.getItem('blogPosts');
+                return savedPosts ? JSON.parse(savedPosts) : [];
+            }
+
+            // Function to save blog posts to local storage
+            function saveToLocalStorage(posts) {
+                localStorage.setItem('blogPosts', JSON.stringify(posts));
+            }
+
+            // Function to display blog posts from local storage
+            function displayBlogPosts() {
+                const blogPosts = getFromLocalStorage();
+                blogPosts.forEach(post => {
+                    const { title, content, author, timestamp } = post;
+                    const blogPostElement = createBlogPostElement(title, content, author, timestamp);
+                    document.getElementById('blog-posts').appendChild(blogPostElement);
+                });
+            }
+
+            // Display blog posts when the page loads
+            displayBlogPosts();
 
             // Get form elements for editing
             const editForm = document.createElement('form');
