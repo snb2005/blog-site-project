@@ -187,10 +187,19 @@
                 // Toggle input area style
                 const inputs = document.querySelectorAll('input[type="text"], textarea');
                 inputs.forEach(input => input.classList.toggle('dark-mode-input'));
+
+                // Save dark mode state to local storage
+                localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
             }
 
             // Event listener for dark mode toggle button
             darkModeToggle.addEventListener('click', toggleDarkMode);
+
+            // Check if dark mode is enabled from previous session
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                toggleDarkMode();
+            }
 
             // Function to create a new blog post element
             function createBlogPostElement(title, content, author, timestamp) {
@@ -237,6 +246,9 @@
 
                         // Hide the edit form
                         editForm.classList.remove('show');
+
+                        // Update the blog post in local storage
+                        updatePostInLocalStorage(title, titleInput.value, contentTextArea.value, authorInput.value);
                     });
                 });
 
@@ -300,6 +312,18 @@
             // Function to save blog posts to local storage
             function saveToLocalStorage(posts) {
                 localStorage.setItem('blogPosts', JSON.stringify(posts));
+            }
+
+            // Function to update a blog post in local storage
+            function updatePostInLocalStorage(oldTitle, newTitle, content, author) {
+                const blogPosts = getFromLocalStorage();
+                const postToUpdate = blogPosts.find(post => post.title === oldTitle);
+                if (postToUpdate) {
+                    postToUpdate.title = newTitle;
+                    postToUpdate.content = content;
+                    postToUpdate.author = author;
+                    saveToLocalStorage(blogPosts);
+                }
             }
 
             // Function to display blog posts from local storage
